@@ -28,7 +28,6 @@ public class VehiclePenetrationButton extends BaseButton
                 else if ((o instanceof String))
                     numberOfHits = Integer.parseInt((String)o);
             }
-
         });
         AddAttribute("strength", "Strength ", Integer.class, new ButtonAttributeMethods()
         {
@@ -40,7 +39,6 @@ public class VehiclePenetrationButton extends BaseButton
                 else if ((o instanceof String))
                     strength = Integer.parseInt((String)o);
             }
-
         });
         AddAttribute("armour", "Armour ", Integer.class, new ButtonAttributeMethods()
         {
@@ -52,7 +50,6 @@ public class VehiclePenetrationButton extends BaseButton
                 else if ((o instanceof String))
                     armour = Integer.parseInt((String)o);
             }
-
         });
         AddAttribute("armourbane", "Armourbane ", Boolean.class, new ButtonAttributeMethods()
         {
@@ -143,31 +140,25 @@ public class VehiclePenetrationButton extends BaseButton
     @Override
     protected void OnClick ()
     {
-        GameModule mod = GameModule.getGameModule();
-        
         if (numberOfHits <= 0)
         {
-            Command chatter = new Chatter.DisplayText(mod.getChatter(), "Number of Hits must be 1 or more.");
-            chatter.execute();
+            Chatbox.WriteLine("Number of Hits must be 1 or more.");
             return;
         }
         
-        String intro = "<" + mod.getPrefs().getValue("RealName") + "> rolls " + numberOfHits;
+        String intro = "<" + Chatbox.GetPlayerName() + "> rolls " + numberOfHits;
         if (numberOfHits == 1)
             intro += " time for vehicle penetration:";
         else
             intro += " times for vehicle penetration:";
-        Command chatter = new Chatter.DisplayText(mod.getChatter(), intro);
+        Chatbox.WriteLine(intro);
         
         for (int i = 0; i < numberOfHits; i++)
-            RollToPenetrate(mod, chatter);
-        
-        chatter.execute();
-        mod.sendAndLog(chatter);
+            RollToPenetrate();
     }
     
     //Returns the total Strength + modifiers
-    protected int RollToPenetrate(GameModule mod, Command chatter)
+    protected int RollToPenetrate()
     {
         int roll = DiceRoll(6);
         String out = "* ";
@@ -244,7 +235,7 @@ public class VehiclePenetrationButton extends BaseButton
                 out += ".";
         }
         
-        chatter.append(new Chatter.DisplayText(mod.getChatter(), out));
+        Chatbox.WriteLine(out);
         
         return roll + strength;
     }

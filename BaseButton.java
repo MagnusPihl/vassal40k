@@ -269,6 +269,19 @@ public abstract class BaseButton extends AbstractConfigurable
         return rolls;
     }
     
+    public int NumberOfSuccesses(int[] rolls, int minimumRequired)
+    {
+        int count = 0;
+        for (int roll : rolls)
+            if (roll >= minimumRequired)
+                count++;
+        return count;
+    }
+    public int NumberOfFailures(int[] rolls, int minimumRequired)
+    {
+        return rolls.length - NumberOfSuccesses(rolls, minimumRequired);
+    }
+    
     public static class IconConfig implements ConfigurerFactory
     {
         @Override

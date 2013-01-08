@@ -97,29 +97,23 @@ public class SavesButton extends BaseButton
     @Override
     protected void OnClick ()
     {
-        GameModule mod = GameModule.getGameModule();
-
         if (numberOfHits <= 0)
         {
-            Command chatter = new Chatter.DisplayText(mod.getChatter(), "Number of Hits must be 1 or more.");
-            chatter.execute();
+            Chatbox.WriteLine("Number of Hits must be 1 or more.");
             return;
         }
 
-        String intro = "<" + mod.getPrefs().getValue("RealName") + "> rolls " + numberOfHits;
+        String intro = "<" + Chatbox.GetPlayerName() + "> rolls " + numberOfHits;
         if (numberOfHits == 1)
             intro += " time to Save:";
         else
             intro += " times to Save:";
-        Command chatter = new Chatter.DisplayText(mod.getChatter(), intro);
+        Chatbox.WriteLine(intro);
 
-        RollSaves(mod, chatter);
-
-        chatter.execute();
-        mod.sendAndLog(chatter);
+        RollSaves();
     }
 
-    protected void RollSaves(GameModule mod, Command chatter)
+    protected void RollSaves()
     {
         int failures = 0;
         int[] saves = DiceRoll(6, numberOfHits);
@@ -208,6 +202,6 @@ public class SavesButton extends BaseButton
 
         str += ", resulting in " + failures + " total unsaved Wounds.";
 
-        chatter.append(new Chatter.DisplayText(mod.getChatter(), str));
+        Chatbox.WriteLine((str));
     }
 }

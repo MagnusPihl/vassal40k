@@ -78,11 +78,9 @@ public class VehicleDamageButton extends BaseButton
     @Override
     protected void OnClick ()
     {
-        GameModule mod = GameModule.getGameModule();
-
         int roll = DiceRoll(6);
         
-        String declaration = "<" + mod.getPrefs().getValue("RealName") + "> rolls on the vehicle damage chart";
+        String declaration = "<" + Chatbox.GetPlayerName() + "> rolls on the vehicle damage chart";
         String rollStr = "* ";
         
         if (holoField)
@@ -138,10 +136,7 @@ public class VehicleDamageButton extends BaseButton
                 rollStr += " (" + explodesRoll + " inches).";
         }
         
-        Command chatter = new Chatter.DisplayText(mod.getChatter(), declaration);
-        chatter.append(new Chatter.DisplayText(mod.getChatter(), rollStr));
-        
-        chatter.execute();
-        mod.sendAndLog(chatter);
+        Chatbox.WriteLine(declaration);
+        Chatbox.WriteLine(rollStr);
     }   
 }
