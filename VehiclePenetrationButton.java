@@ -30,7 +30,6 @@ public class VehiclePenetrationButton extends BaseButton
             }
 
         });
-        Initialize("Vehicle Penetration", "Vehicle Penetration", "Vehicle Penetration", true);
         AddAttribute("strength", "Strength ", Integer.class, new ButtonAttributeMethods()
         {
             @Override public String getter() { return String.valueOf(strength); }

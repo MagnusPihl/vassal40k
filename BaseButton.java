@@ -14,6 +14,7 @@ import VASSAL.tools.LaunchButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import javax.swing.KeyStroke;
@@ -257,6 +258,15 @@ public abstract class BaseButton extends AbstractConfigurable
     public int DiceRoll(int sides)
     {
         return (int)(rng.nextFloat() * sides + 1.0F);
+    }
+    
+    public int[] DiceRoll(int sides, int dice)
+    {
+        int[] rolls = new int[dice];
+        for(int i = 0; i < dice; i++)
+            rolls[i] = DiceRoll(sides);
+        Arrays.sort(rolls);
+        return rolls;
     }
     
     public static class IconConfig implements ConfigurerFactory
