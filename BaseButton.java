@@ -268,6 +268,18 @@ public abstract class BaseButton extends AbstractConfigurable
         Arrays.sort(rolls);
         return rolls;
     }
+
+    public String CommaSeparateIntegers(int[] input)
+    {
+        if (input.length == 0)
+            return "";
+
+        String output = input[0] + "";
+        for (int i = 1; i < input.length; i++)
+            output += ", " + input[i];
+
+        return output;
+    }
     
     public int NumberOfSuccesses(int[] rolls, int minimumRequired)
     {
@@ -280,6 +292,22 @@ public abstract class BaseButton extends AbstractConfigurable
     public int NumberOfFailures(int[] rolls, int minimumRequired)
     {
         return rolls.length - NumberOfSuccesses(rolls, minimumRequired);
+    }
+
+    public String Pluralize(String word, int count)
+    {
+        if (count == 1)
+            return word;
+        else
+            return word + "s";
+    }
+
+    public String PluralizeIsAre (int count)
+    {
+        if (count == 1)
+            return "is";
+        else
+            return "are";
     }
     
     public static class IconConfig implements ConfigurerFactory

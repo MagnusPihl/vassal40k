@@ -1,94 +1,55 @@
-public class ToHitAndWoundButton extends BaseButton
+public class ToHitAndWoundButton extends ToHitBaseButton
 {
-    private int numberOfAttacks = 1;
-    private int toHit = 4;
-    private boolean bsHigherThan5 = false;
-    private int toHitOnRerollFromBS = 6;
-    private boolean rerollOneMissedHit = false;
-    private boolean rerollToHitOf1 = false;
-    private boolean rerollAllMissedHits = false;
     private int toWound = 4;
+    private boolean rerollFailedToWound = false;
     private boolean precisionShots = false;
     private boolean rending = false;   //Always wounds on a 6 resolved at AP2
     
     public ToHitAndWoundButton()
     {
         Initialize("To Hit/Wound", "To Hit/Wound", "To Hit/Wound", true);
-        AddAttribute("numberOfAttacks", "Number of Attacks ", Integer.class, new ButtonAttributeMethods()
+        AddAttribute("toWound", "To Wound ", Integer.class, new ButtonAttributeMethods()
         {
-            @Override public String getter() { return String.valueOf(numberOfAttacks); }
+            @Override public String getter() { return String.valueOf(toWound); }
             @Override public void setter (Object o)
             {
                 if ((o instanceof Integer))
-                    numberOfAttacks = ((Integer)o).intValue();
+                    toWound = ((Integer)o).intValue();
                 else if ((o instanceof String))
-                    numberOfAttacks = Integer.parseInt((String)o);
+                    toWound = Integer.parseInt((String)o);
             }
         });
-        AddAttribute("toHit", "To Hit ", Integer.class, new ButtonAttributeMethods()
+        AddAttribute("rerollFailedToWound", "Re-roll failed To-Wound rolls ", Boolean.class, new ButtonAttributeMethods()
         {
-            @Override public String getter() { return String.valueOf(toHit); }
-            @Override public void setter (Object o)
-            {
-                if ((o instanceof Integer))
-                    toHit = ((Integer)o).intValue();
-                else if ((o instanceof String))
-                    toHit = Integer.parseInt((String)o);
-            }
-        });
-        AddAttribute("bsHigherThan5", "BS is 6+ ", Boolean.class, new ButtonAttributeMethods()
-        {
-            @Override public String getter() { return String.valueOf(bsHigherThan5); }
+            @Override public String getter() { return String.valueOf(rerollFailedToWound); }
             @Override public void setter (Object o)
             {
                 if ((o instanceof Boolean))
-                    bsHigherThan5 = ((Boolean)o).booleanValue();
+                    rerollFailedToWound = ((Boolean)o).booleanValue();
                 else if ((o instanceof String))
-                    bsHigherThan5 = o.equals("true");
+                    rerollFailedToWound = o.equals("true");
             }
         });
-        AddAttribute("toHitOnRerollFromBS", "To Hit on re-roll due to 6+ BS ", Integer.class, new ButtonAttributeMethods()
+        AddAttribute("precisionShots", "Precision Shots ", Boolean.class, new ButtonAttributeMethods()
         {
-            @Override public String getter() { return String.valueOf(toHitOnRerollFromBS); }
-            @Override public void setter (Object o)
-            {
-                if ((o instanceof Integer))
-                    toHitOnRerollFromBS = ((Integer)o).intValue();
-                else if ((o instanceof String))
-                    toHitOnRerollFromBS = Integer.parseInt((String)o);
-            }
-        });
-        AddAttribute("rerollOneMissedHit", "Re-roll one missed hit ", Boolean.class, new ButtonAttributeMethods()
-        {
-            @Override public String getter() { return String.valueOf(rerollOneMissedHit); }
+            @Override public String getter() { return String.valueOf(precisionShots); }
             @Override public void setter (Object o)
             {
                 if ((o instanceof Boolean))
-                    rerollOneMissedHit = ((Boolean)o).booleanValue();
+                    precisionShots = ((Boolean)o).booleanValue();
                 else if ((o instanceof String))
-                    rerollOneMissedHit = o.equals("true");
+                    precisionShots = o.equals("true");
             }
         });
-        AddAttribute("rerollToHitOf1", "Re-roll To Hit rolls of 1 ", Boolean.class, new ButtonAttributeMethods()
+        AddAttribute("rending", "Rending ", Boolean.class, new ButtonAttributeMethods()
         {
-            @Override public String getter() { return String.valueOf(rerollToHitOf1); }
+            @Override public String getter() { return String.valueOf(rending); }
             @Override public void setter (Object o)
             {
                 if ((o instanceof Boolean))
-                    rerollToHitOf1 = ((Boolean)o).booleanValue();
+                    rending = ((Boolean)o).booleanValue();
                 else if ((o instanceof String))
-                    rerollToHitOf1 = o.equals("true");
-            }
-        });
-        AddAttribute("rerollAllMissedHits", "Re-roll all missed hits ", Boolean.class, new ButtonAttributeMethods()
-        {
-            @Override public String getter() { return String.valueOf(rerollAllMissedHits); }
-            @Override public void setter (Object o)
-            {
-                if ((o instanceof Boolean))
-                    rerollAllMissedHits = ((Boolean)o).booleanValue();
-                else if ((o instanceof String))
-                    rerollAllMissedHits = o.equals("true");
+                    rending = o.equals("true");
             }
         });
     }
@@ -102,31 +63,22 @@ public class ToHitAndWoundButton extends BaseButton
             return;
         }
         
-        String intro = "<" + Chatbox.GetPlayerName() + "> rolls To-Hit for " + numberOfAttacks + " attack";
-        if (numberOfAttacks > 1)
-            intro += " s";
-        intro += ":";
-        Chatbox.WriteLine(intro);
+        Chatbox.WriteLine("<" + Chatbox.GetPlayerName() + "> rolls To-Hit for " + numberOfAttacks + " " + Pluralize("attack", numberOfAttacks) + ":");
         
         int hits = RollToHit(numberOfAttacks);
-        
-        intro = "<" + Chatbox.GetPlayerName() + "> rolls To-Wound for " + hits + " hit";
-        if (hits > 1)
-            intro += " s";
-        intro += ":";
-        Chatbox.WriteLine(intro);
-        
-        int wounds = RollToWound(hits);
+
+        if (hits > 0)
+        {
+            Chatbox.WriteLine("<" + Chatbox.GetPlayerName() + "> rolls To-Wound for " + hits + " " + Pluralize("hit", hits) + ":");
+            RollToWound(hits);
+        }
     }
     
     //Returns number of hits
     protected int RollToHit(int attacks)
     {
         int[] rolls = DiceRoll(6, attacks);
-        String out = "* To-Hit needing " + toHit + "+ (" + rolls[0];
-        for (int i = 1; i < rolls.length; i++)
-            out += ", " + rolls[i];
-        out += ")";
+        String out = "* To-Hit needing " + toHit + "+ (" + CommaSeparateIntegers(rolls) + ")";
         
         int hits = NumberOfSuccesses(rolls, toHit);
         int misses = attacks - hits;
@@ -134,10 +86,7 @@ public class ToHitAndWoundButton extends BaseButton
         if (misses > 0 && bsHigherThan5)
         {
             int[] rerolls = DiceRoll(6, misses);
-            out += ", re-rolling due to 6+ BS needing " + toHitOnRerollFromBS + "+ (" + rerolls[0];
-            for (int i = 1; i < rerolls.length; i++)
-                out += ", " + rerolls[i];
-            out += ")";
+            out += ", re-rolling " + misses + " misses due to 6+ BS needing " + toHitOnRerollFromBS + "+ (" + CommaSeparateIntegers(rerolls) + ")";
             hits += NumberOfSuccesses(rerolls, toHitOnRerollFromBS);
             misses = attacks - hits;
         }
@@ -145,10 +94,7 @@ public class ToHitAndWoundButton extends BaseButton
         if (misses > 0 && rerollAllMissedHits)
         {
             int[] rerolls = DiceRoll(6, misses);
-            out += ", re-rolling " + misses + " misses needing " + toHit + "+ (" + rerolls[0];
-            for (int i = 1; i < rerolls.length; i++)
-                out += ", " + rerolls[i];
-            out += ")";
+            out += ", re-rolling " + misses + " misses needing " + toHit + "+ (" + CommaSeparateIntegers(rerolls) + ")";
             hits += NumberOfSuccesses(rerolls, toHit);
             misses = attacks - hits;
         }
@@ -158,10 +104,7 @@ public class ToHitAndWoundButton extends BaseButton
             {
                 int ones = NumberOfFailures(rolls, 2);
                 int[] rerolls = DiceRoll(6, ones);
-                out += ", re-rolling " + ones + " 1s needing " + toHit + "+ (" + rerolls[0];
-                for (int i = 1; i < rerolls.length; i++)
-                    out += ", " + rerolls[i];
-                out += ")";
+                out += ", re-rolling " + ones + " " + Pluralize("'1'", ones) + " needing " + toHit + "+ (" + CommaSeparateIntegers(rerolls) + ")";
                 hits += NumberOfSuccesses(rerolls, toHit);
                 misses = attacks - hits;
             }
@@ -189,6 +132,35 @@ public class ToHitAndWoundButton extends BaseButton
     //Returns number of wounds
     protected int RollToWound(int hits)
     {
-        return 0;
+        int[] rolls = DiceRoll(6, hits);
+        String out = "* To-Wound needing " + toWound + "+ (" + CommaSeparateIntegers(rolls) + ")";
+        int successes = NumberOfSuccesses(rolls, toWound);
+        int failures = hits - successes;
+        int sixes = NumberOfSuccesses(rolls, 6);
+
+        if (failures > 0 && rerollFailedToWound)
+        {
+            int[] rerolls = DiceRoll(6, failures);
+            out += ", re-rolling " + failures + " failures (" + CommaSeparateIntegers(rerolls) + ")";
+            successes += NumberOfSuccesses(rerolls, toWound);
+            failures = hits - successes;
+            sixes += NumberOfSuccesses(rerolls, 6);
+        }
+        
+        out += " = " + successes + " Wounds";
+
+        if (sixes > 0)
+        {
+            if (precisionShots && rending)
+                out += ", " + sixes + " of which " + PluralizeIsAre(sixes) + " Rending (AP 2) and Precision Shots";
+            else if (precisionShots)
+                out += ", " + sixes + " of which " + PluralizeIsAre(sixes) + " Precision Shots";
+            else if (rending)
+                out += ", " + sixes + " of which " + PluralizeIsAre(sixes) + " Rending (AP 2)";
+        }
+
+        Chatbox.WriteLine(out);
+
+        return successes;
     }
 }
