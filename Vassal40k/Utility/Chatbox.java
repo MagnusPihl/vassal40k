@@ -1,3 +1,5 @@
+package Vassal40k.Utility;
+
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Chatter;
 import VASSAL.command.Command;

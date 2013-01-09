@@ -1,3 +1,7 @@
+package Vassal40k.Buttons;
+
+import Vassal40k.Utility.Chatbox;
+
 public class ToHitAndWoundButton extends ToHitBaseButton
 {
     private int toWound = 4;

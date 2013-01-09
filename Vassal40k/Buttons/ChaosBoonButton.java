@@ -1,6 +1,6 @@
-import VASSAL.build.GameModule;
-import VASSAL.build.module.Chatter;
-import VASSAL.command.Command;
+package Vassal40k.Buttons;
+
+import Vassal40k.Utility.Chatbox;
 
 public class ChaosBoonButton extends BaseButton
 {

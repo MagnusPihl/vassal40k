@@ -1,3 +1,7 @@
+package Vassal40k.Buttons;
+
+import Vassal40k.Utility.Chatbox;
+
 public class ToHitAndPenetrateButton extends ToHitBaseButton
 {
     private int strength = 4;

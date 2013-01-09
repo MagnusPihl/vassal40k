@@ -1,3 +1,5 @@
+package Vassal40k.Buttons;
+
 import VASSAL.build.AbstractConfigurable;
 import VASSAL.build.AutoConfigurable;
 import VASSAL.build.Buildable;
@@ -298,6 +300,8 @@ public abstract class BaseButton extends AbstractConfigurable
     {
         if (count == 1)
             return word;
+        else if (word.equals("inch"))
+            return "inches";
         else
             return word + "s";
     }

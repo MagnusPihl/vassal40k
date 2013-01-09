@@ -1,3 +1,7 @@
+package Vassal40k.Buttons;
+
+import Vassal40k.Utility.Chatbox;
+
 public abstract class ToHitBaseButton extends BaseButton
 {
     protected int numberOfAttacks = 1;

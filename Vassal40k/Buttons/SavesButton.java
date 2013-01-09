@@ -1,3 +1,6 @@
+package Vassal40k.Buttons;
+
+import Vassal40k.Utility.Chatbox;
 import VASSAL.build.GameModule;
 import VASSAL.build.module.Chatter;
 import VASSAL.command.Command;
@@ -103,12 +106,7 @@ public class SavesButton extends BaseButton
             return;
         }
 
-        String intro = "<" + Chatbox.GetPlayerName() + "> rolls " + numberOfHits;
-        if (numberOfHits == 1)
-            intro += " time to Save:";
-        else
-            intro += " times to Save:";
-        Chatbox.WriteLine(intro);
+        Chatbox.WriteLine("<" + Chatbox.GetPlayerName() + "> rolls " + numberOfHits + " " + Pluralize("time", numberOfHits) + " to Save:");
 
         RollSaves();
     }
