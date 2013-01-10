@@ -29,16 +29,17 @@ public class ArmyLoaderButton extends BaseButton
         List<Map> maps = Map.getMapList();
         //JFileChooser fileDlg = new JFileChooser();
         //fileDlg.showOpenDialog(launchButton);
-        String side = PlayerRoster.getMySide();
-        GamePiece gp = GameModule.getGameModule().getGameState().getPieceForId("3261");
+        //String side = PlayerRoster.getMySide();
+        //GamePiece gp = GameModule.getGameModule().getGameState().getPieceForId("3261");
         /*if (gp == null)
             gp = GameModule.getGameModule().createPiece("3261");
         if (gp == null)
             gp = GameModule.getGameModule().createPiece(BasicPiece.ID + ";;3261;;");
         if (gp == null)
             gp = GameModule.getGameModule().createPiece("End Torpedo");*/
-        if (gp == null)
-            gp = GameModule.getGameModule().createPiece(BasicPiece.ID + ";;SM_CHAR_Calgar.png;;");
+        //if (gp == null)
+        //    gp = GameModule.getGameModule().createPiece(BasicPiece.ID + ";;SM_CHAR_Calgar.png;;");
+        
         /*
         
         Collection<GamePiece> gamePieces = GameModule.getGameModule().getGameState().getAllPieces();
@@ -47,7 +48,7 @@ public class ArmyLoaderButton extends BaseButton
             //if (piece.getId().contains("1212"))
                 MessageBox(piece.getName());
         }*/
-        
+        /*
         PieceSlot slot = new PieceSlot();
         slot.setGpId("3261");
         gp = slot.getPiece();
@@ -62,7 +63,7 @@ public class ArmyLoaderButton extends BaseButton
             //cmd.execute();
             maps.get(0).addPiece(gp);
             //GameModule.getGameModule().sendAndLog(cmd);
-        }
+        }*/
     }
     
     public static void MessageBox(String message)

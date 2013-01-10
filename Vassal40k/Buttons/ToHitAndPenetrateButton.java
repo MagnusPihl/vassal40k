@@ -16,7 +16,7 @@ public class ToHitAndPenetrateButton extends ToHitBaseButton
 
     public ToHitAndPenetrateButton()
     {
-        Initialize("Vehicle Penetration", "Vehicle Penetration", "Vehicle Penetration", true);
+        Initialize("To Hit/Penetrate", "To Hit/Penetrate", "To Hit/Penetrate", true);
         AddAttribute("strength", "Strength ", Integer.class, new BaseButton.ButtonAttributeMethods()
         {
             @Override public String getter() { return String.valueOf(strength); }
