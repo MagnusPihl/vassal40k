@@ -5,6 +5,7 @@ import Vassal40k.Utility.Chatbox;
 public class ToHitAndWoundButton extends ToHitBaseButton
 {
     private int toWound = 4;
+    private boolean rerollToWoundOf1 = false;
     private boolean rerollFailedToWound = false;
     private boolean precisionShots = false;
     private boolean rending = false;   //Always wounds on a 6 resolved at AP2
@@ -21,6 +22,17 @@ public class ToHitAndWoundButton extends ToHitBaseButton
                     toWound = ((Integer)o).intValue();
                 else if ((o instanceof String))
                     toWound = Integer.parseInt((String)o);
+            }
+        });
+        AddAttribute("rerollToWoundOf1", "Re-roll To-Wound rolls of 1 ", Boolean.class, new ButtonAttributeMethods()
+        {
+            @Override public String getter() { return String.valueOf(rerollToWoundOf1); }
+            @Override public void setter (Object o)
+            {
+                if ((o instanceof Boolean))
+                    rerollToWoundOf1 = ((Boolean)o).booleanValue();
+                else if ((o instanceof String))
+                    rerollToWoundOf1 = o.equals("true");
             }
         });
         AddAttribute("rerollFailedToWound", "Re-roll failed To-Wound rolls ", Boolean.class, new ButtonAttributeMethods()
@@ -78,61 +90,6 @@ public class ToHitAndWoundButton extends ToHitBaseButton
         }
     }
     
-    //Returns number of hits
-    protected int RollToHit(int attacks)
-    {
-        int[] rolls = DiceRoll(6, attacks);
-        String out = "* To-Hit needing " + toHit + "+ (" + CommaSeparateIntegers(rolls) + ")";
-        
-        int hits = NumberOfSuccesses(rolls, toHit);
-        int misses = attacks - hits;
-        
-        if (misses > 0 && bsHigherThan5)
-        {
-            int[] rerolls = DiceRoll(6, misses);
-            out += ", re-rolling " + misses + " misses due to 6+ BS needing " + toHitOnRerollFromBS + "+ (" + CommaSeparateIntegers(rerolls) + ")";
-            hits += NumberOfSuccesses(rerolls, toHitOnRerollFromBS);
-            misses = attacks - hits;
-        }
-        
-        if (misses > 0 && rerollAllMissedHits)
-        {
-            int[] rerolls = DiceRoll(6, misses);
-            out += ", re-rolling " + misses + " misses needing " + toHit + "+ (" + CommaSeparateIntegers(rerolls) + ")";
-            hits += NumberOfSuccesses(rerolls, toHit);
-            misses = attacks - hits;
-        }
-        else if (misses > 0)
-        {
-            if (rerollToHitOf1 && NumberOfFailures(rolls, 2) > 0)
-            {
-                int ones = NumberOfFailures(rolls, 2);
-                int[] rerolls = DiceRoll(6, ones);
-                out += ", re-rolling " + ones + " " + Pluralize("'1'", ones) + " needing " + toHit + "+ (" + CommaSeparateIntegers(rerolls) + ")";
-                hits += NumberOfSuccesses(rerolls, toHit);
-                misses = attacks - hits;
-            }
-            if (misses > 0 && rerollOneMissedHit)
-            {
-                int reroll = DiceRoll(6);
-                out += ", re-rolling one missed hit needing " + toHit + "+ (" + reroll + ")";
-                if (reroll >= toHit)
-                {
-                    hits++;
-                    misses--;
-                }
-            }
-        }
-        
-        if (hits == 1)
-            out += " = " + hits + " hit";
-        else
-            out += " = " + hits + " hits";
-        
-        Chatbox.WriteLine(out);
-        return hits;
-    }
-    
     //Returns number of wounds
     protected int RollToWound(int hits)
     {
@@ -141,14 +98,24 @@ public class ToHitAndWoundButton extends ToHitBaseButton
         int successes = NumberOfSuccesses(rolls, toWound);
         int failures = hits - successes;
         int sixes = NumberOfSuccesses(rolls, 6);
+        int ones = NumberOfFailures(rolls, 2);
 
-        if (failures > 0 && rerollFailedToWound)
+        if (failures > 0)
         {
-            int[] rerolls = DiceRoll(6, failures);
-            out += ", re-rolling " + failures + " failures (" + CommaSeparateIntegers(rerolls) + ")";
-            successes += NumberOfSuccesses(rerolls, toWound);
-            failures = hits - successes;
-            sixes += NumberOfSuccesses(rerolls, 6);
+            int numRerolls = 0;
+            if (rerollFailedToWound)
+                numRerolls = failures;
+            else if (rerollToWoundOf1)
+                numRerolls = ones;
+            
+            if (numRerolls > 0)
+            {
+                int[] rerolls = DiceRoll(6, numRerolls);
+                out += ", re-rolling " + numRerolls + " failures (" + CommaSeparateIntegers(rerolls) + ")";
+                successes += NumberOfSuccesses(rerolls, toWound);
+                failures = hits - successes;
+                sixes += NumberOfSuccesses(rerolls, 6);
+            }
         }
         
         out += " = " + successes + " Wounds";
