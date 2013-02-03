@@ -2,9 +2,11 @@ package Vassal40k.Army;
 
 import VASSAL.build.module.Map;
 import VASSAL.build.module.PlayerRoster;
+import VASSAL.counters.GamePiece;
 import Vassal40k.Army.Loader.RosterLoader;
 import Vassal40k.Buttons.BaseButton;
 import Vassal40k.Utility.Chatbox;
+import java.util.ArrayList;
 import javax.swing.JFileChooser;
 
 public class LoadArmyButton extends BaseButton
@@ -17,29 +19,32 @@ public class LoadArmyButton extends BaseButton
     @Override
     protected void OnClick ()
     {
-        /*
+        
         for (Map map : Map.getMapList())
         {
-            List<GamePiece> gamePieces = new ArrayList<GamePiece>();
-            SaveArmyButton.GetGamePieces(gamePieces, map.getAllPieces());
-            if (gamePieces.size() == 0)
-                continue;
-            Chatbox.WriteLine(map.getMapName());
-            Chatbox.WriteLine("-----------");
-            for (GamePiece gp : gamePieces)
+            //if (map.getMapName().equals(Chatbox.GetPlayerName()))
             {
-                Chatbox.WriteLine(" -- " + gp.getName() + " -- ");
-                Chatbox.WriteLine(("-Type-"));
-                Chatbox.WriteLine(gp.getType());
-                Chatbox.WriteLine(("-State-"));
-                Chatbox.WriteLine(gp.getState());
+                ArrayList<GamePiece> gamePieces = new ArrayList<GamePiece>();
+                SaveArmyButton.GetGamePieces(gamePieces, map.getAllPieces());
+                if (gamePieces.size() == 0)
+                    continue;
+                Chatbox.WriteLine(map.getMapName());
+                Chatbox.WriteLine("-----------");
+                for (GamePiece gp : gamePieces)
+                {
+                    Chatbox.WriteLine(" -- " + gp.getName() + " -- ");
+                    Chatbox.WriteLine(("-Type-"));
+                    Chatbox.WriteLine(gp.getType());
+                    Chatbox.WriteLine(("-State-"));
+                    Chatbox.WriteLine(gp.getState());
+                    Chatbox.WriteLine("");
+                }
+                Chatbox.WriteLine("-----------");
+                Chatbox.WriteLine("");
                 Chatbox.WriteLine("");
             }
-            Chatbox.WriteLine("-----------");
-            Chatbox.WriteLine("");
-            Chatbox.WriteLine("");
         }
-        */
+        
         
         JFileChooser fileDlg = new JFileChooser();
         fileDlg.setFileFilter(new ArmyFileFilter());

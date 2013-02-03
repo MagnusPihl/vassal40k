@@ -11,7 +11,6 @@ import Vassal40k.Army.Loader.Converters.Unit;
 import Vassal40k.Utility.Chatbox;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -61,8 +60,8 @@ public abstract class RosterLoader
             switch (root.getNodeName())
             {
                 case "roster":
-                    Chatbox.WriteLine("- Error: BattleScribe files are not yet supported.");
-                    return null;
+                    Chatbox.WriteLine("- Detected BattleScribe roster. Loading...");
+                    return new BattleScribeRosterLoader();
                 case "document":
                     String signature = root.getAttribute("signature");
                     if (signature != null)

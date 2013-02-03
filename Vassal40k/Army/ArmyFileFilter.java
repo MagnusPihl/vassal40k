@@ -15,8 +15,8 @@ public class ArmyFileFilter extends FileFilter
             return true;
         else if (f.getName().toLowerCase().endsWith(".rst"))        //ArmyBuilder
             return true;
-        /*else if (f.getName().toLowerCase().endsWith(".ros"))      //BattleScribe
-            return true;*/
+        else if (f.getName().toLowerCase().endsWith(".ros"))      //BattleScribe
+            return true;
         
         return false;
     }
@@ -24,7 +24,7 @@ public class ArmyFileFilter extends FileFilter
     @Override
     public String getDescription ()
     {
-        return "Vassal40k Army, ArmyBuilder Roster";    //BattleScribe?
+        return "Vassal40k Army, ArmyBuilder Roster, BattleScribe Roster";
     }
     
 }

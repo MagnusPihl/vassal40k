@@ -13,12 +13,16 @@ import VASSAL.configure.ConfigurerFactory;
 import VASSAL.configure.ConfigurerWindow;
 import VASSAL.configure.IconConfigurer;
 import VASSAL.tools.LaunchButton;
+import Vassal40k.Utility.Chatbox;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 public abstract class BaseButton extends AbstractConfigurable
@@ -47,7 +51,7 @@ public abstract class BaseButton extends AbstractConfigurable
         public void setter(Object o);
     }
 
-    private List<ButtonAttribute> attributes = new ArrayList<ButtonAttribute>();
+    private List<ButtonAttribute> attributes = new ArrayList<>();
     private String[] attributeNamesCache = null;
     private String[] attributeDescriptionsCache = null;
     private Class<?>[] attributeTypesCache = null;
@@ -58,6 +62,7 @@ public abstract class BaseButton extends AbstractConfigurable
 
     protected abstract void OnClick();
 
+    protected boolean allowOnlyOneInstance = true;
     protected LaunchButton launchButton;
     protected String buttonTooltip = "";
     protected Random rng;
@@ -85,6 +90,8 @@ public abstract class BaseButton extends AbstractConfigurable
 
                     w.pack();
                     w.setLocationRelativeTo(launchButton.getTopLevelAncestor());
+                    if (allowOnlyOneInstance)
+                        RemoveSecondInstance();
                     w.setVisible(true);
                     
                     if (!w.isCancelled())
@@ -255,6 +262,20 @@ public abstract class BaseButton extends AbstractConfigurable
     public Class[] getAllowableConfigureComponents ()
     {
         return new Class[0];
+    }
+    
+    /**
+     * This is a TERRIBLE workaround for a Vassal bug. I'm a little sketchy on why it even works and it might break at any moment.
+     * The problem is that sub-menus in Vassal, if they open a dialog, they will add a second copy of their own button.
+     * For some reason, this is only recognised as one component in Vassal, so we have to do this weird trick of removing that
+     * instance and re-adding it.
+     */
+    protected void RemoveSecondInstance()
+    {
+        GameModule gm = GameModule.getGameModule();
+        int index = gm.getToolBar().getComponentIndex(launchButton);
+        gm.getToolBar().remove(launchButton);
+        gm.getToolBar().add(launchButton, index);
     }
 
     public int DiceRoll(int sides)

@@ -2,17 +2,16 @@ package Vassal40k.Army.Loader.Converters;
 
 import VASSAL.counters.GamePiece;
 import Vassal40k.Army.Loader.RosterLoader;
-import Vassal40k.Utility.Chatbox;
 import java.util.HashSet;
 
 public class ArmyBuilderModel extends AbstractModel
 {
-    private String unit = null;
+    private String model = null;
     private HashSet<String> wargear = new HashSet<>();
     
-    public ArmyBuilderModel(String unitID, String... wargearIDs)
+    public ArmyBuilderModel(String modelID, String... wargearIDs)
     {
-        unit = unitID;
+        model = modelID;
         for (String wg : wargearIDs)
             AddWargear(wg);
     }
@@ -32,13 +31,13 @@ public class ArmyBuilderModel extends AbstractModel
     @Override
     public String getOriginalID()
     {
-        return unit;
+        return model;
     }
 
     @Override
     public String getVassalID()
     {
-        switch (unit)
+        switch (model)
         {
             /**
             * Ork HQ
@@ -192,7 +191,6 @@ public class ArmyBuilderModel extends AbstractModel
              * Ork Transports
              */
             case "orTrukk":
-                Chatbox.WriteLine("Ork Trukk!");
                 return "ORK:197";
         }
         

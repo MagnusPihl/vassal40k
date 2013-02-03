@@ -2,7 +2,6 @@ package Vassal40k.Army;
 
 import Vassal40k.Army.Loader.Converters.AbstractModel;
 import Vassal40k.Army.Loader.Converters.Unit;
-import Vassal40k.Army.Loader.ModelPackager;
 import Vassal40k.Army.Loader.RosterLoader;
 import java.io.File;
 import java.util.HashSet;
@@ -17,7 +16,7 @@ public class ArmyLoaderTest
         fileDlg.showOpenDialog(null);
         File file = fileDlg.getSelectedFile();
         List<Unit> units = RosterLoader.Load(file, null);
-        HashSet<String> errors = new HashSet<>();
+        /*HashSet<String> errors = new HashSet<>();
         for (Unit unit : units)
         {
             System.out.println("Found unit w/ " + unit.Models.size() + " model(s)");
@@ -37,6 +36,6 @@ public class ArmyLoaderTest
             {
                 System.out.println("  " + error);
             }
-        }
+        }*/
     }
 }

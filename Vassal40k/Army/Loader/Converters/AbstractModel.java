@@ -37,10 +37,24 @@ public abstract class AbstractModel implements Box
         Point p = new Point(getGamePiece().getPosition().x, y);
         getGamePiece().setPosition(p);
     }
+    int width = -1;
     @Override
-    public int getWidth() { return (int) (getGamePiece().getShape().getBounds().width * 1.5); }
+    public int getWidth()
+    {
+        if (width < 0)
+            width = getGamePiece().boundingBox().width;
+        return width;
+        //return (int) (getGamePiece().getShape().getBounds().width * 1.5);
+    }
+    int height = -1;
     @Override
-    public int getHeight() { return (int) (getGamePiece().getShape().getBounds().height * 1.5); }
+    public int getHeight()
+    {
+        if (height < 0)
+            height = getGamePiece().boundingBox().height;
+        return height;
+        //return (int) (getGamePiece().getShape().getBounds().height * 1.5);
+    }
     @Override
     public int getArea() { return getWidth() * getHeight(); }
 }
