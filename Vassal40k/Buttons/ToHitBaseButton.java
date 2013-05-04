@@ -11,6 +11,7 @@ public abstract class ToHitBaseButton extends BaseButton
     protected boolean rerollOneMissedHit = false;
     protected boolean rerollToHitOf1 = false;
     protected boolean rerollAllMissedHits = false;
+    protected boolean twinLinked = false;
     protected boolean tesla = false;
 
     @Override
@@ -95,6 +96,17 @@ public abstract class ToHitBaseButton extends BaseButton
                     rerollAllMissedHits = o.equals("true");
             }
         });
+        AddAttribute("twinLinked", "Twin-Linked ", Boolean.class, new BaseButton.ButtonAttributeMethods()
+        {
+            @Override public String getter() { return String.valueOf(twinLinked); }
+            @Override public void setter (Object o)
+            {
+                if ((o instanceof Boolean))
+                    twinLinked = ((Boolean)o).booleanValue();
+                else if ((o instanceof String))
+                    twinLinked = o.equals("true");
+            }
+        });
         AddAttribute("tesla", "Tesla ", Boolean.class, new BaseButton.ButtonAttributeMethods()
         {
             @Override public String getter() { return String.valueOf(tesla); }
@@ -120,17 +132,10 @@ public abstract class ToHitBaseButton extends BaseButton
 
         int hits = NumberOfSuccesses(rolls, toHit);
         int misses = attacks - hits;
+        
+        out += ", getting " + hits + " " + Pluralize("hit", hits);
 
-        if (misses > 0 && bsHigherThan5)
-        {
-            int[] rerolls = DiceRoll(6, misses);
-            out += ", re-rolling " + misses + " misses due to 6+ BS needing " + toHitOnRerollFromBS + "+ (" + CommaSeparateIntegers(rerolls) + ")";
-            hits += NumberOfSuccesses(rerolls, toHitOnRerollFromBS);
-            misses = attacks - hits;
-            sixes += NumberOfSuccesses(rerolls, 6);
-        }
-
-        if (misses > 0 && rerollAllMissedHits)
+        if (misses > 0 && (rerollAllMissedHits || twinLinked))
         {
             int[] rerolls = DiceRoll(6, misses);
             out += ", re-rolling " + misses + " misses needing " + toHit + "+ (" + CommaSeparateIntegers(rerolls) + ")";
@@ -144,22 +149,30 @@ public abstract class ToHitBaseButton extends BaseButton
             {
                 int ones = NumberOfFailures(rolls, 2);
                 int[] rerolls = DiceRoll(6, ones);
-                out += ", re-rolling " + ones + " 1s needing " + toHit + "+ (" + CommaSeparateIntegers(rerolls) + ")";
+                misses -= ones; //They might still be misses, but we don't want to re-roll
+                out += ", re-rolling " + ones + " " + Pluralize("roll", ones) + " of "+ Pluralize("1", ones) + " needing " + toHit + "+ (" + CommaSeparateIntegers(rerolls) + ")";
                 hits += NumberOfSuccesses(rerolls, toHit);
-                misses = attacks - hits;
                 sixes += NumberOfSuccesses(rerolls, 6);
             }
             if (misses > 0 && rerollOneMissedHit)
             {
+                misses--;   //Might still be a miss, but we don't want to re-roll
                 int reroll = DiceRoll(6);
                 out += ", re-rolling one missed hit needing " + toHit + "+ (" + reroll + ")";
                 if (reroll >= toHit)
                 {
                     hits++;
-                    misses--;
                 }
                 if (reroll == 6)
                     sixes++;
+            }
+            if (misses > 0 && bsHigherThan5)
+            {
+                int[] rerolls = DiceRoll(6, misses);
+                out += ", re-rolling " + misses + " misses due to 6+ BS needing " + toHitOnRerollFromBS + "+ (" + CommaSeparateIntegers(rerolls) + ")";
+                hits += NumberOfSuccesses(rerolls, toHitOnRerollFromBS);
+                misses = attacks - hits;    //if we add future conditions, this should instead be: misses -= rerolls.length;
+                sixes += NumberOfSuccesses(rerolls, 6);
             }
         }
 

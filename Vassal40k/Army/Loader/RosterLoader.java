@@ -29,7 +29,7 @@ public abstract class RosterLoader
         
         RosterLoader loader = DetectFileType(file);
         if (loader == null)
-            return new ArrayList<>();
+            return new ArrayList<Unit>();
         List<Unit> units = loader.Load(file);
         
         int modelCount = 0;
@@ -57,26 +57,27 @@ public abstract class RosterLoader
             doc.getDocumentElement().normalize();
             
             Element root = doc.getDocumentElement();
-            switch (root.getNodeName())
+            if (root.getNodeName().equals("roster"))
             {
-                case "roster":
-                    Chatbox.WriteLine("- Detected BattleScribe roster. Loading...");
-                    return new BattleScribeRosterLoader();
-                case "document":
-                    String signature = root.getAttribute("signature");
-                    if (signature != null)
+                Chatbox.WriteLine("- Detected BattleScribe roster. Loading...");
+                return new BattleScribeRosterLoader();
+            }
+            else if (root.getNodeName().equals("document"))
+            {
+                String signature = root.getAttribute("signature");
+                if (signature != null)
+                {
+                    if (signature.equals("Army Builder Roster"))
                     {
-                        switch (signature)
-                        {
-                            case "Army Builder Roster":
-                                Chatbox.WriteLine("- Detected Army Builder roster. Loading...");
-                                return new ArmyBuilderRosterLoader();
-                            case "Vassal 40k Army":
-                                Chatbox.WriteLine("- Detected Vassal40k roster. Loading...");
-                                return new Vassal40kRosterLoader();
-                        }
+                        Chatbox.WriteLine("- Detected Army Builder roster. Loading...");
+                        return new ArmyBuilderRosterLoader();
                     }
-                    break;
+                    else if (signature.equals("Vassal 40k Army"))
+                    {
+                        Chatbox.WriteLine("- Detected Vassal40k roster. Loading...");
+                        return new Vassal40kRosterLoader();
+                    }
+                }
             }
         }
         catch(Exception ex)

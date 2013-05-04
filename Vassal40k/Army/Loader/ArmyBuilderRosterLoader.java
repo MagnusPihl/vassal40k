@@ -19,7 +19,7 @@ public class ArmyBuilderRosterLoader extends RosterLoader
     @Override
     public List<Unit> Load (File file)
     {
-        ArrayList<Unit> result = new ArrayList<>();
+        ArrayList<Unit> result = new ArrayList<Unit>();
         
         try
         {
@@ -59,7 +59,7 @@ public class ArmyBuilderRosterLoader extends RosterLoader
     
     protected void getModelsRecursively(Node entityNode, List<AbstractModel> modelList)
     {
-        ArrayList<ArmyBuilderModel> localModels = new ArrayList<>();
+        ArrayList<ArmyBuilderModel> localModels = new ArrayList<ArmyBuilderModel>();
         NamedNodeMap attributes = entityNode.getAttributes();
         int count = Integer.parseInt(attributes.getNamedItem("count").getNodeValue());
         for (int k = 0; k < count; k++)

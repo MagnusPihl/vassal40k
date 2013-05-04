@@ -6,7 +6,7 @@ public class Unit implements Box
 {
     private static final int PADDING = 20;
     
-    public ArrayList<AbstractModel> Models = new ArrayList<>();
+    public ArrayList<AbstractModel> Models = new ArrayList<AbstractModel>();
 
     private int x = 0;
     @Override

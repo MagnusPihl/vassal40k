@@ -51,7 +51,7 @@ public class SaveArmyButton extends BaseButton
         {
             if (map.getMapName().equals(side))
             {
-                List<GamePiece> gamePieces = new ArrayList<>();
+                List<GamePiece> gamePieces = new ArrayList<GamePiece>();
                 GetGamePieces(gamePieces, map.getAllPieces());
                 String xml = Vassal40kRosterSaver.Save(gamePieces);
                 if (xml == null)

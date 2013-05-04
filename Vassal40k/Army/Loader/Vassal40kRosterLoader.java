@@ -20,7 +20,7 @@ public class Vassal40kRosterLoader extends RosterLoader
     @Override
     public List<Unit> Load(File xmlFile)
     {
-        List<Unit> result = new ArrayList<>();
+        List<Unit> result = new ArrayList<Unit>();
         
         try
         {

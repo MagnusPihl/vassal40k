@@ -51,7 +51,7 @@ public abstract class BaseButton extends AbstractConfigurable
         public void setter(Object o);
     }
 
-    private List<ButtonAttribute> attributes = new ArrayList<>();
+    private List<ButtonAttribute> attributes = new ArrayList<ButtonAttribute>();
     private String[] attributeNamesCache = null;
     private String[] attributeDescriptionsCache = null;
     private Class<?>[] attributeTypesCache = null;

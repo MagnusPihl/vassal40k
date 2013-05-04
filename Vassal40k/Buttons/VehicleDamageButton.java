@@ -4,6 +4,7 @@ import Vassal40k.Utility.Chatbox;
 
 public class VehicleDamageButton extends BaseButton
 {
+    protected int numberOfHits = 1;
     protected boolean ap1 = false;
     protected boolean ap2 = false;
     protected boolean openTopped = false;
@@ -13,6 +14,17 @@ public class VehicleDamageButton extends BaseButton
     public VehicleDamageButton()
     {
         Initialize("Vehicle Damage", "Vehicle Damage", "Vehicle Damage", true);
+        AddAttribute("numberOfHits", "Number of Hits ", Integer.class, new ButtonAttributeMethods()
+        {
+            @Override public String getter() { return String.valueOf(numberOfHits); }
+            @Override public void setter (Object o)
+            {
+                if ((o instanceof Integer))
+                    numberOfHits = ((Integer)o).intValue();
+                else if ((o instanceof String))
+                    numberOfHits = Integer.parseInt((String)o);
+            }
+        });
         AddAttribute("ap1", "AP 1 ", Boolean.class, new ButtonAttributeMethods()
         {
             @Override public String getter() { return String.valueOf(ap1); }
@@ -78,65 +90,67 @@ public class VehicleDamageButton extends BaseButton
     @Override
     protected void OnClick ()
     {
-        int roll = DiceRoll(6);
-        
-        String declaration = "<" + Chatbox.GetPlayerName() + "> rolls on the vehicle damage chart";
-        String rollStr = "* ";
-        
-        if (holoField)
-        {
-            int secondRoll = DiceRoll(6);
-            rollStr += "Holo-field rolls (" + roll + ", " + secondRoll + "), taking lowest (";
-            if (secondRoll < roll)
-                roll = secondRoll;
-            rollStr += roll + ") ";
-        }
-        else
-        {
-            rollStr += "(" + roll + ") ";
-        }
-        int baseRoll = roll;
-        
-        if (ap1)
-        {
-            roll += 2;
-            //declaration += ", at AP 1";
-            rollStr += "+ 2 (AP 1) ";
-        }
-        else if (ap2)
-        {
-            roll += 1;
-            //declaration += ", at AP 2";
-            rollStr += "+ 1 (AP 2) ";
-        }
-        
-        if (openTopped)
-        {
-            roll += 1;
-            //declaration += ", vs. open-topped";
-            rollStr += "+ 1 (Open-topped) ";
-        }
-        
-        if (roll != baseRoll)   //No point in adding additional result if it hasn't changed
-            rollStr += "= (" + roll + ") ";
-        
-        if (roll <= 2)
-            rollStr += "= Crew Shaken";
-        else if (roll == 3)
-            rollStr += "= Crew Stunned";
-        else if (roll == 4)
-            rollStr += "= Weapon Destroyed";
-        else if (roll == 5)
-            rollStr += "= Immobilised";
-        else if (roll >= 6)
-        {
-            int explodesRoll = DiceRoll(6);
-            rollStr += "= Explodes!";
-            if (rollExplosionDistance)
-                rollStr += " (" + explodesRoll + " inches).";
-        }
-        
+        String declaration = "<" + Chatbox.GetPlayerName() + "> rolls " + numberOfHits + " " + Pluralize("time", numberOfHits) + " on the vehicle damage chart";
         Chatbox.WriteLine(declaration);
-        Chatbox.WriteLine(rollStr);
+        for (int i = 0; i < numberOfHits; i++)
+        {
+            int roll = DiceRoll(6);
+            String rollStr = "* ";
+
+            if (holoField)
+            {
+                int secondRoll = DiceRoll(6);
+                rollStr += "Holo-field rolls (" + roll + ", " + secondRoll + "), taking lowest (";
+                if (secondRoll < roll)
+                    roll = secondRoll;
+                rollStr += roll + ") ";
+            }
+            else
+            {
+                rollStr += "(" + roll + ") ";
+            }
+            int baseRoll = roll;
+
+            if (ap1)
+            {
+                roll += 2;
+                //declaration += ", at AP 1";
+                rollStr += "+ 2 (AP 1) ";
+            }
+            else if (ap2)
+            {
+                roll += 1;
+                //declaration += ", at AP 2";
+                rollStr += "+ 1 (AP 2) ";
+            }
+
+            if (openTopped)
+            {
+                roll += 1;
+                //declaration += ", vs. open-topped";
+                rollStr += "+ 1 (Open-topped) ";
+            }
+
+            if (roll != baseRoll)   //No point in adding additional result if it hasn't changed
+                rollStr += "= (" + roll + ") ";
+
+            if (roll <= 2)
+                rollStr += "= Crew Shaken";
+            else if (roll == 3)
+                rollStr += "= Crew Stunned";
+            else if (roll == 4)
+                rollStr += "= Weapon Destroyed";
+            else if (roll == 5)
+                rollStr += "= Immobilised";
+            else if (roll >= 6)
+            {
+                int explodesRoll = DiceRoll(6);
+                rollStr += "= Explodes!";
+                if (rollExplosionDistance)
+                    rollStr += " (" + explodesRoll + " inches).";
+            }
+
+            Chatbox.WriteLine(rollStr);
+        }
     }   
 }

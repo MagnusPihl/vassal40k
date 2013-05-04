@@ -1,9 +1,6 @@
 package Vassal40k.Buttons;
 
 import Vassal40k.Utility.Chatbox;
-import VASSAL.build.GameModule;
-import VASSAL.build.module.Chatter;
-import VASSAL.command.Command;
 
 public class VehiclePenetrationButton extends BaseButton
 {

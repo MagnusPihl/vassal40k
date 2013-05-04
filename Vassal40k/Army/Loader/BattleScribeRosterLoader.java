@@ -18,7 +18,7 @@ public class BattleScribeRosterLoader extends RosterLoader
     @Override
     public List<Unit> Load (File file)
     {
-        ArrayList<Unit> result = new ArrayList<>();
+        ArrayList<Unit> result = new ArrayList<Unit>();
         
         try
         {
@@ -86,7 +86,7 @@ public class BattleScribeRosterLoader extends RosterLoader
                         if (model.getGamePiece() != null)
                         {
                             modelList.add(model);
-                            List<String> wargearList = new ArrayList<>();
+                            List<String> wargearList = new ArrayList<String>();
                             getWargearRecursively(node, wargearList);
                             for (String wargear : wargearList)
                                 model.AddWargear(wargear);

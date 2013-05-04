@@ -121,12 +121,12 @@ public class SavesButton extends BaseButton
                 failures++;
         }
         
-        String str = "* Rolling ";
+        String str = "* Rolling " + numberOfHits + " " + Pluralize("Save", numberOfHits) + ", needing " + toSave + "+, ";
         if (numberOfHits == 1)
-            str += "Save (" + saves[0] + ")";
+            str += "(" + saves[0] + ")";
         else
         {
-            str += "Saves (" + saves[0];
+            str += "(" + saves[0];
             for (int i = 1; i < saves.length; i++)
                 str += ", " + saves[i];
             str += ")";
@@ -171,7 +171,7 @@ public class SavesButton extends BaseButton
         {
             int[] fnpSaves = DiceRoll(6, failures);
 
-            str += ", rolling " + failures + " Feel No Pain (" + fnpSaves[0];
+            str += ", rolling " + failures + " Feel No Pain, needing " + toFeelNoPain + "+, (" + fnpSaves[0];
             for (int i = 1; i < fnpSaves.length; i++)
                 str += ", " + fnpSaves[i];
             str += ")";

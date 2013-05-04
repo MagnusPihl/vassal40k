@@ -19,33 +19,6 @@ public class LoadArmyButton extends BaseButton
     @Override
     protected void OnClick ()
     {
-        
-        for (Map map : Map.getMapList())
-        {
-            //if (map.getMapName().equals(Chatbox.GetPlayerName()))
-            {
-                ArrayList<GamePiece> gamePieces = new ArrayList<GamePiece>();
-                SaveArmyButton.GetGamePieces(gamePieces, map.getAllPieces());
-                if (gamePieces.size() == 0)
-                    continue;
-                Chatbox.WriteLine(map.getMapName());
-                Chatbox.WriteLine("-----------");
-                for (GamePiece gp : gamePieces)
-                {
-                    Chatbox.WriteLine(" -- " + gp.getName() + " -- ");
-                    Chatbox.WriteLine(("-Type-"));
-                    Chatbox.WriteLine(gp.getType());
-                    Chatbox.WriteLine(("-State-"));
-                    Chatbox.WriteLine(gp.getState());
-                    Chatbox.WriteLine("");
-                }
-                Chatbox.WriteLine("-----------");
-                Chatbox.WriteLine("");
-                Chatbox.WriteLine("");
-            }
-        }
-        
-        
         JFileChooser fileDlg = new JFileChooser();
         fileDlg.setFileFilter(new ArmyFileFilter());
         if (fileDlg.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
